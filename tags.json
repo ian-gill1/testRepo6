@@ -1,0 +1,28 @@
+{
+  "name": "",
+  "tagType": "Provider",
+  "tags": [
+    {
+      "valueSource": "memory",
+      "name": "tag3",
+      "value": 13,
+      "tagType": "AtomicTag"
+    },
+    {
+      "valueSource": "memory",
+      "name": "tag2",
+      "value": 10,
+      "tagType": "AtomicTag"
+    },
+    {
+      "valueSource": "memory",
+      "name": "testgitTag",
+      "value": 5,
+      "tagType": "AtomicTag"
+    },
+    {
+      "name": "_types_",
+      "tagType": "Folder"
+    }
+  ]
+}
