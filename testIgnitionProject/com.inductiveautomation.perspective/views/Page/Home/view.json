@@ -143,7 +143,19 @@
           "basis": "32px"
         },
         "props": {
-          "text": "Label"
+          "text": "test Label"
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "Label_1"
+        },
+        "position": {
+          "basis": "32px"
+        },
+        "props": {
+          "text": "new test"
         },
         "type": "ia.display.label"
       },
