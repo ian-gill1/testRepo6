@@ -137,6 +137,18 @@
       },
       {
         "meta": {
+          "name": "Label_0"
+        },
+        "position": {
+          "basis": "32px"
+        },
+        "props": {
+          "text": "Label"
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
           "name": "CoordinateContainer"
         },
         "position": {
