@@ -51,10 +51,10 @@
     }
   },
   "props": {
-    "address": "10.4.10.133",
+    "address": "10.4.10.135",
     "device": {},
     "geolocation": {},
-    "locale": "en-US",
+    "locale": "en-IE",
     "securityLevels": [],
     "theme": "light-cool",
     "timeZoneId": "Etc/UTC"
