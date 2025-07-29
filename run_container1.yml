@@ -1,0 +1,149 @@
+
+---
+- name: Create 3 containers and run command
+  hosts: localhost
+  vars:
+    containers:
+      - name: dev_container
+        hostname: dev-gateway
+        port: "8089:8088"
+      - name: qa_container
+        hostname: qa-gateway
+        port: "8090:8088"
+      - name: prod_container
+        hostname: prod-gateway
+        port: "8091: 8088"
+    git_branches:
+      - development
+      - QA
+      - production
+    PAT_token: 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
+  connection: local
+  gather_facts: false
+
+  tasks:
+    - name: Check if containers already exists
+      community.docker.docker_container_info:
+        name: "{{ item.name }}"
+      loop: "{{ containers }}"
+      register: container_info_results
+      failed_when: false
+      changed_when: false
+
+    - name: Check if all 3 containers exist
+      set_fact:
+        containers_exist: "{{ (container_info_results.results | selectattr('container', 'defined') | selectattr('container', '!=', None) | list | length) == (containers | length) }}"
+
+    - name: Create 3 containers
+      community.docker.docker_container:
+        name: "{{ item.name }}"
+        image: inductiveautomation/ignition:8.1.47
+        state: started
+        auto_remove: no
+        hostname: "{{ item.hostname }}"
+#        volumes:
+#          - dev_ignition_data:/usr/local/ignition/data
+        ports:
+          - "{{ item.port }}"
+      loop: "{{ containers }}"
+      when: not containers_exist
+
+    - name: Set facts for all containers
+      set_fact:
+        dev_container: "{{ containers | selectattr('name', 'equalto', 'dev_container') | first }}"
+        qa_container: "{{ containers | selectattr('name', 'equalto', 'qa_container') | first }}"
+        prod_container: "{{ containers | selectattr('name', 'equalto', 'prod_container') | first }}"
+
+    - name: Install git inside each container
+      community.docker.docker_container_exec:
+        container: "{{ item.name }}"
+        user: root
+        command: bash -c "apt-get update && apt-get install -y git"
+      loop: "{{ containers }}"
+      register: git_install_result
+      when: not containers_exist
+ 
+    - name: Remove existing projects folder
+      community.docker.docker_container_exec:
+        container: "{{ item.name }}"
+        user: root
+        command: rm -rf /usr/local/bin/ignition/data/projects
+      loop: "{{ containers }}"
+      register: remove_existing_folder_result
+      when: not containers_exist
+ 
+    - name: Clone repo into projects folder
+      community.docker.docker_container_exec:
+        container: "{{ item.name }}"
+        user: root
+        command: bash -c "cd /usr/local/bin/ignition/data && git clone https://"{{ PAT_token }}"@github.com/ian-gill1/testRepo6.git projects"
+      loop: "{{ containers }}"
+      register: clone_repo_result
+      when: not containers_exist
+ 
+    - name: Give permissions to Ignition user for projects folder
+      community.docker.docker_container_exec:
+        container: "{{ item.name }}"
+        user: root
+        command: bash -c "chown -R ignition:ignition /usr/local/bin/ignition/data/projects && chmod -R u+rwX /usr/local/bin/ignition/data/projects"
+      loop: "{{ containers }}"
+      register: permissions_result
+      when: not containers_exist
+ 
+    - name: Mark projects folder as safe directory
+      community.docker.docker_container_exec:
+        container: "{{ item.name }}"
+        user: root
+        command: git config --global --add safe.directory /usr/local/bin/ignition/data/projects
+      loop: "{{ containers }}"
+      register: safe_directory_result
+      when: not containers_exist
+ 
+    - name: Copy over gitCommit script into data folder
+      community.docker.docker_container_copy_into:
+        container: "{{ dev_container.name }}"
+        path: "/gitAutoCommit/gitCommit.sh"
+        container_path: "/usr/local/bin/ignition/data/gitCommit.sh"
+      when: not containers_exist
+
+    - name: Make gitCommit script executable
+      community.docker.docker_container_exec:
+        container: "{{ dev_container.name }}"
+        user: root
+        command: chmod +x /usr/local/bin/ignition/data/gitCommit.sh
+      when: not containers_exist
+
+    - name: Give permission to Ignition user for git operations
+      community.docker.docker_container_exec:
+        container: "{{ item.name }}"
+        user: root
+        command: chown -R ignition:ignition /usr/local/bin/ignition/data/projects/.git
+      loop: "{{ containers }}"
+      when: not containers_exist
+ 
+    - name: Set git credentials
+      community.docker.docker_container_exec:
+        container: "{{ dev_container.name }}"
+        user: ignition
+        command: bash -c 'cd /usr/local/bin/ignition/data/projects && git config user.name "ian-gill1" && git config user.email "iang@nnit.com"'
+      when: not containers_exist
+ 
+    - name: Switch to correct git branch
+      community.docker.docker_container_exec:
+        container: "{{ containers[item].name }}"
+        user: ignition
+        command: bash -c "cd /usr/local/bin/ignition/data/projects && git checkout {{ git_branches[item] }} && git branch --set-upstream-to=origin/{{ git_branches[item] }}"
+      loop: "{{ range(0, containers | length) | list }}"
+      when: not containers_exist
+ 
+    - name: Run a command in the running container
+      community.docker.docker_container_exec:
+        container: "{{ item.name }}"
+        user: ignition
+        command: bash -c "cd /usr/local/bin/ignition/data/projects && git pull"
+      loop: "{{ containers }}"
+      register: result
+
+    - name: Show command output
+      debug:
+        var: result.stdout
