@@ -12,6 +12,7 @@ on:
 jobs:
   run-ansible-playbook:
     runs-on: self-hosted
+    timeout-minutes: 30
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
