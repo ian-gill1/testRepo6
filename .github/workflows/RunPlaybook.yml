@@ -20,4 +20,4 @@ jobs:
 
       # Runs a set of commands using the runners shell
       - name: Run the playbook
-        run: ansible-playbook run_container.yml
+        run: ansible-playbook run_container2.yml
