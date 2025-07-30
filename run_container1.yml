@@ -102,8 +102,7 @@
     - name: Copy over gitCommit script into data folder
       community.docker.docker_container_copy_into:
         container: "{{ dev_container.name }}"
-        path: "/gitAutoCommit/gitCommit.sh"
-        container_path: "/usr/local/bin/ignition/data/gitCommit.sh"
+        command: docker cp gitCommit.sh:/usr/local/bin/ignition/data/gitCommit.sh
       when: not containers_exist
 
     - name: Make gitCommit script executable
