@@ -99,18 +99,20 @@
       register: safe_directory_result
       when: not containers_exist
 
-    - name: Temporary fix for docker copy of gitCommit
-      community.docker.docker_container_exec:
-        container: "{{ dev_container.name }}"
-        user: root
-        command: bash -c "apt install -y docker.io"
-      when: not containers_exist
+#    - name: Temporary fix for docker copy of gitCommit
+#      community.docker.docker_container_exec:
+#        container: "{{ dev_container.name }}"
+#        user: root
+#        command: bash -c "apt install -y docker.io"
+#      when: not containers_exist
       
     - name: Copy over gitCommit script into data folder
-      community.docker.docker_container_exec:
+      community.docker.docker_container_copy_into:
         container: "{{ dev_container.name }}"
-        command: docker cp ./ gitCommit.sh:/usr/local/bin/ignition/data
+        path: "/gitCommit.sh"
+        container_path: "/usr/local/bin/ignition/data/gitCommit.sh"
       when: not containers_exist
+
 
     - name: Make gitCommit script executable
       community.docker.docker_container_exec:
