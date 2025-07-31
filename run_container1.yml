@@ -19,7 +19,7 @@
       - production
     gitUserName: ian-gill1
     gitUserEmail: iang@nnit.com
-    PAT_token: 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
+    PAT_token: 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
   connection: local
   gather_facts: false
 
@@ -123,26 +123,26 @@
         command: chmod +x /usr/local/bin/ignition/data/gitCommit.sh
       when: not containers_exist
 
-    - name: Set git username and password
-      community.docker.docker_container_exec:
-        container: "{{ dev_container.name }}"
-        user: ignition
-        command: bash -c "git config --global user.name '{{ gitUserName }}' && git config --global user.email '{{ gitUserEmail }}'"
-      when: not containers_exist
+#    - name: Set git username and password
+#      community.docker.docker_container_exec:
+#        container: "{{ dev_container.name }}"
+#        user: ignition
+#        command: bash -c "git config --global user.name '{{ gitUserName }}' && git config --global user.email '{{ gitUserEmail }}'"
+#      when: not containers_exist
 
-    - name: Set Git credential helper to store
-      community.docker.docker_container_exec:
-        container: "{{ dev_container.name }}"
-        user: ignition
-        command: git config --global credential.helper store
-      when: not containers_exist
+#    - name: Set Git credential helper to store
+#      community.docker.docker_container_exec:
+#        container: "{{ dev_container.name }}"
+#        user: ignition
+#        command: git config --global credential.helper store
+#      when: not containers_exist
 
-    - name: Store GitHub PAT in credentials file
-      community.docker.docker_container_exec:
-        container: "{{ dev_container.name }}"
-        user: ignition
-        command: bash -c "echo 'https://{{ PAT_token }}@github.com' > ~/.git-credentials"
-      when: not containers_exist
+#    - name: Store GitHub PAT in credentials file
+#      community.docker.docker_container_exec:
+#        container: "{{ dev_container.name }}"
+#        user: ignition
+#        command: bash -c "echo 'https://{{ PAT_token }}@github.com/ian-gill1/testRepo6.git' > ~/.git-credentials"
+#      when: not containers_exist
 
     - name: Give permission to Ignition user for git operations
       community.docker.docker_container_exec:
