@@ -17,6 +17,8 @@
       - development
       - QA
       - production
+    gitUserName: ian-gill1
+    gitUserEmail: iang@nnit.com
     PAT_token: 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
   connection: local
   gather_facts: false
@@ -119,6 +121,25 @@
         container: "{{ dev_container.name }}"
         user: root
         command: chmod +x /usr/local/bin/ignition/data/gitCommit.sh
+      when: not containers_exist
+
+    - name: Set git username and password
+      community.docker.docker_container_exec:
+        container: "{{ dev_container.name }}"
+        user: root
+        command: git config --global user.name "{{ gitUserName }}" && git config --global user.email "{{ gitUserEmail }}"
+      when: not containers_exist
+
+    - name: Set Git credential helper to store
+      community.docker.docker_container_exec:
+        container: "{{ dev_container.name }}"
+        command: git config --global credential.helper store
+      when: not containers_exist
+
+    - name: Store GitHub PAT in credentials file
+      community.docker.docker_container_exec:
+        container: "{{ dev_container.name }}"
+        command: bash -c 'echo "https://"{{ PAT_token }}"@github.com" > ~/.git-credentials'
       when: not containers_exist
 
     - name: Give permission to Ignition user for git operations
