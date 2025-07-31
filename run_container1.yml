@@ -106,7 +106,7 @@
       when: not containers_exist
       
     - name: Copy over gitCommit script into data folder
-      community.docker.docker_container_copy:
+      community.docker.docker_container_exec:
         container: "{{ dev_container.name }}"
         command: docker cp ./ gitCommit.sh:/usr/local/bin/ignition/data
       when: not containers_exist
