@@ -102,6 +102,7 @@
     - name: Temporary fix for docker copy of gitCommit
       community.docker.docker_container_exec:
         container: "{{ dev_container.name }}"
+        user: root
         command: bash -c "apt install docker.io"
       when: not containers_exist
       
