@@ -103,7 +103,7 @@
       community.docker.docker_container_exec:
         container: "{{ dev_container.name }}"
         user: root
-        command: bash -c "apt install docker.io"
+        command: bash -c "apt install -y docker.io"
       when: not containers_exist
       
     - name: Copy over gitCommit script into data folder
