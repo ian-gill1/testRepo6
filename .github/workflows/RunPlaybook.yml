@@ -13,6 +13,8 @@ jobs:
   run-ansible-playbook:
     runs-on: self-hosted
     timeout-minutes: 30
+    env:
+      PAT_token: ${{ secrets.PAT_TOKEN }}
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -24,7 +26,7 @@ jobs:
         
       # Runs a set of commands using the runners shell
       - name: Run the playbook
-        run: ansible-playbook -i localhost, run_container1.yml
+        run: ansible-playbook -i localhost, run_container1.yml -e "PAT_token=$PAT_token"
 
       - name: Debug Ansible environment
         run: |
