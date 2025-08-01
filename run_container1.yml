@@ -19,7 +19,7 @@
       - production
     gitUserName: ian-gill1
     gitUserEmail: iang@nnit.com
-    PAT_token: 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
+    PAT_token: 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
   connection: local
   gather_facts: false
 
