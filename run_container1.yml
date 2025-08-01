@@ -19,7 +19,7 @@
       - production
     gitUserName: ian-gill1
     gitUserEmail: iang@nnit.com
-    PAT_token: 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
+#    PAT_token: ghp_y7tdlKuQwHw8OutyW2zjMKdeLBAMBb13Hjp
   connection: local
   gather_facts: false
 
@@ -78,7 +78,7 @@
       community.docker.docker_container_exec:
         container: "{{ item.name }}"
         user: root
-        command: bash -c "cd /usr/local/bin/ignition/data && git clone https://"{{ PAT_token }}"@github.com/ian-gill1/testRepo6.git projects"
+        command: bash -c "cd /usr/local/bin/ignition/data && git clone https://{{ PAT_token }}@github.com/ian-gill1/testRepo6.git projects"
       loop: "{{ containers }}"
       register: clone_repo_result
       when: not containers_exist
