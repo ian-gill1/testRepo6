@@ -1,0 +1,36 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Run the Ansible Script
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "development" branch
+  push:
+    branches: [ "QA" ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  run-ansible-playbook:
+    runs-on: self-hosted
+    timeout-minutes: 30
+    env:
+      PAT_token: ${{ secrets.PAT_TOKEN }}
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+
+      - name: Install ansible collections
+        run: ansible-galaxy collection install community.docker
+        
+      # Runs a set of commands using the runners shell
+      - name: Run the playbook
+        run: ansible-playbook -i localhost, run_container1.yml -e "PAT_token=$PAT_token"
+
+      - name: Debug Ansible environment
+        run: |
+          which ansible
+          ansible --version
+          echo "Collections path: $ANSIBLE_COLLECTIONS_PATH"
+          ansible-galaxy collection list
