@@ -5,6 +5,7 @@
       "viewPath": "Page/Home"
     },
     "/alarms": {
+      "title": "",
       "viewPath": "Page/Alarms"
     },
     "/charts": {
