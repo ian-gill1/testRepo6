@@ -37,6 +37,18 @@
       },
       {
         "meta": {
+          "name": "Label"
+        },
+        "position": {
+          "basis": "32px"
+        },
+        "props": {
+          "text": "Label 1"
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
           "name": "AlarmStatusTable"
         },
         "position": {
