@@ -150,7 +150,7 @@
         user: root
         command: chown -R ignition:ignition /usr/local/bin/ignition/data/projects/.git
       loop: "{{ containers }}"
-      when: not containers_exist
+#      when: not containers_exist
  
     - name: Set git credentials
       community.docker.docker_container_exec:
@@ -178,3 +178,4 @@
     - name: Show command output
       debug:
         var: result.stdout
+
