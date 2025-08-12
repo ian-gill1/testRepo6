@@ -166,16 +166,24 @@
         command: bash -c "cd /usr/local/bin/ignition/data/projects && git checkout {{ git_branches[item] }} && git branch --set-upstream-to=origin/{{ git_branches[item] }}"
       loop: "{{ range(0, containers | length) | list }}"
       when: not containers_exist
+
+    - name: Discard uncommitted changes in the Git repo
+      community.docker.docker_container_exec:
+        container: "{{ item.name }}"
+        user: ignition
+        command: git reset --hard HEAD
+      loop: "{{ containers }}"
  
     - name: Run a command in the running container
       community.docker.docker_container_exec:
         container: "{{ item.name }}"
         user: ignition
-        command: bash -c "cd /usr/local/bin/ignition/data/projects && git pull"
+        command: bash -c "cd /usr/local/bin/ignition/data/projects && git pull --no-rebase"
       loop: "{{ containers }}"
       register: result
 
     - name: Show command output
       debug:
         var: result.stdout
+
 
