@@ -50,6 +50,15 @@
           }
         },
         "type": "ia.chart.powerchart"
+      },
+      {
+        "meta": {
+          "name": "Slider"
+        },
+        "position": {
+          "basis": "32px"
+        },
+        "type": "ia.input.slider"
       }
     ],
     "meta": {
