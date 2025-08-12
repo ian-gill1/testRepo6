@@ -171,7 +171,7 @@
       community.docker.docker_container_exec:
         container: "{{ item.name }}"
         user: ignition
-        command: git reset --hard HEAD
+        command: bash -c "cd /usr/local/bin/ignition/data/projects && git reset --hard HEAD"
       loop: "{{ containers }}"
  
     - name: Run a command in the running container
@@ -185,5 +185,6 @@
     - name: Show command output
       debug:
         var: result.stdout
+
 
 
