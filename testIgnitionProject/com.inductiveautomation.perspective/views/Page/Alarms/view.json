@@ -43,7 +43,7 @@
           "basis": "32px"
         },
         "props": {
-          "text": "Label 1 2 3 4 5 6"
+          "text": "Label 1 2 3 4 5 6 7"
         },
         "type": "ia.display.label"
       },
