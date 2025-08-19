@@ -42,8 +42,6 @@
         state: started
         auto_remove: no
         hostname: "{{ item.hostname }}"
-#        volumes:
-#          - dev_ignition_data:/usr/local/ignition/data
         ports:
           - "{{ item.port }}"
       loop: "{{ containers }}"
@@ -99,13 +97,6 @@
       loop: "{{ containers }}"
       register: safe_directory_result
       when: not containers_exist
-
-#    - name: Temporary fix for docker copy of gitCommit
-#      community.docker.docker_container_exec:
-#        container: "{{ dev_container.name }}"
-#        user: root
-#        command: bash -c "apt install -y docker.io"
-#      when: not containers_exist
       
     - name: Copy over gitCommit script into data folder
       community.docker.docker_container_copy_into:
@@ -121,27 +112,6 @@
         user: root
         command: chmod +x /usr/local/bin/ignition/data/gitCommit.sh
       when: not containers_exist
-
-#    - name: Set git username and password
-#      community.docker.docker_container_exec:
-#        container: "{{ dev_container.name }}"
-#        user: ignition
-#        command: bash -c "git config --global user.name '{{ gitUserName }}' && git config --global user.email '{{ gitUserEmail }}'"
-#      when: not containers_exist
-
-#    - name: Set Git credential helper to store
-#      community.docker.docker_container_exec:
-#        container: "{{ dev_container.name }}"
-#        user: ignition
-#        command: git config --global credential.helper store
-#      when: not containers_exist
-
-#    - name: Store GitHub PAT in credentials file
-#      community.docker.docker_container_exec:
-#        container: "{{ dev_container.name }}"
-#        user: ignition
-#        command: bash -c "echo 'https://{{ PAT_token }}@github.com/ian-gill1/testRepo6.git' > ~/.git-credentials"
-#      when: not containers_exist
 
     - name: Give permission to Ignition user for git operations
       community.docker.docker_container_exec:
@@ -184,6 +154,7 @@
     - name: Show command output
       debug:
         var: result.stdout
+
 
 
 
