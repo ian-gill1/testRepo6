@@ -19,7 +19,6 @@
       - production
     gitUserName: ian-gill1
     gitUserEmail: iang@nnit.com
-#    PAT_token: ghp_y7tdlKuQwHw8OutyW2zjMKdeLBAMBb13Hjp
   connection: local
   gather_facts: false
 
@@ -185,6 +184,7 @@
     - name: Show command output
       debug:
         var: result.stdout
+
 
 
 
