@@ -29,9 +29,3 @@ jobs:
       - name: Run the playbook
         run: ansible-playbook -i localhost, run_container1.yml -e "PAT_token=$PAT_token"
 
-      - name: Debug Ansible environment
-        run: |
-          which ansible
-          ansible --version
-          echo "Collections path: $ANSIBLE_COLLECTIONS_PATH"
-          ansible-galaxy collection list
